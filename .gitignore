@@ -1,0 +1,35 @@
+# Arquivos do Python
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+
+# Arquivos do ambiente virtual
+venv/
+.env
+*.venv
+
+# Arquivos do banco de dados
+*.db
+*.sqlite
+*.sqlite3
+
+# Arquivos do Streamlit
+.streamlit/
+
+# Arquivos do sistema
+.DS_Store
+Thumbs.db
+
+# Logs e arquivos temporários
+logs/
+*.log
+
+# Dependências instaladas pelo pip
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Configurações do IDE
+.vscode/
+.idea/
+*.iml
