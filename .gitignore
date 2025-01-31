@@ -10,7 +10,6 @@ venv/
 *.venv
 
 # Arquivos do banco de dados
-*.db
 *.sqlite
 *.sqlite3
 
