@@ -68,6 +68,7 @@ st.subheader("Cadastrar Nova Receita")
 origem = st.text_input("Origem da Receita")
 valor_receita = st.number_input("Valor da Receita", min_value=0.01, format="%.2f", key="novo_valor_receita")
 data_receita = st.date_input("Data da Receita")
+
 if st.button("Salvar Receita"):
     cursor.execute("INSERT INTO receitas (origem, valor, data) VALUES (?, ?, ?)", 
                    (origem, valor_receita, data_receita))
@@ -90,7 +91,23 @@ if despesas:
     valor_despesa = st.number_input("Valor da Despesa", min_value=0.01, format="%.2f", value=despesa[2], key=f"valor_despesa_{despesa[0]}")
     responsavel = st.selectbox("Responsável pelo Pagamento", ["Léo", "Vivian"], index=["Léo", "Vivian"].index(despesa[3]), key=f"responsavel_{despesa[0]}")
     data_despesa = st.date_input("Data da Despesa", value=pd.to_datetime(despesa[4]), key=f"data_despesa_{despesa[0]}")
-    
+    # Criar um campo para selecionar de qual orçamento o recurso irá sair
+    orçamento = st.selectbox("Como será pago?", [
+        "Fundo 2025", 
+        "Mercado", 
+        "Emergência",
+        "Prioridades",
+        "Ajuda Leo",
+        "Caixa Viagem", 
+        "Emplacamento", 
+        "Ajuda Vivian", 
+        "Oferta Leo", 
+        "Oferta Vivian", 
+        "Caixa Yan",
+        "Dízimos", 
+        "Extras", 
+        "Outros"
+        ])
     if st.button("Atualizar Despesa"):
         cursor.execute("UPDATE despesas SET categoria = ?, valor = ?, responsavel = ?, data = ? WHERE id = ?", 
                        (categoria, valor_despesa, responsavel, data_despesa, despesa[0]))
