@@ -91,23 +91,7 @@ if despesas:
     valor_despesa = st.number_input("Valor da Despesa", min_value=0.01, format="%.2f", value=despesa[2], key=f"valor_despesa_{despesa[0]}")
     responsavel = st.selectbox("Responsável pelo Pagamento", ["Léo", "Vivian"], index=["Léo", "Vivian"].index(despesa[3]), key=f"responsavel_{despesa[0]}")
     data_despesa = st.date_input("Data da Despesa", value=pd.to_datetime(despesa[4]), key=f"data_despesa_{despesa[0]}")
-    # Criar um campo para selecionar de qual orçamento o recurso irá sair
-    orçamento = st.selectbox("Como será pago?", [
-        "Fundo 2025", 
-        "Mercado", 
-        "Emergência",
-        "Prioridades",
-        "Ajuda Leo",
-        "Caixa Viagem", 
-        "Emplacamento", 
-        "Ajuda Vivian", 
-        "Oferta Leo", 
-        "Oferta Vivian", 
-        "Caixa Yan",
-        "Dízimos", 
-        "Extras", 
-        "Outros"
-        ])
+    
     if st.button("Atualizar Despesa"):
         cursor.execute("UPDATE despesas SET categoria = ?, valor = ?, responsavel = ?, data = ? WHERE id = ?", 
                        (categoria, valor_despesa, responsavel, data_despesa, despesa[0]))
@@ -127,6 +111,23 @@ categoria = st.text_input("Categoria da Despesa")
 valor_despesa = st.number_input("Valor da Despesa", min_value=0.01, format="%.2f", key="novo_valor_despesa")
 responsavel = st.selectbox("Responsável pelo Pagamento", ["Léo", "Vivian"])
 data_despesa = st.date_input("Data da Despesa")
+
+orçamento = st.selectbox("Como será pago?", [
+    "Fundo 2025", 
+    "Mercado", 
+    "Emergência",
+    "Prioridades",
+    "Ajuda Leo",
+    "Caixa Viagem", 
+    "Emplacamento", 
+    "Ajuda Vivian", 
+    "Oferta Leo", 
+    "Oferta Vivian", 
+    "Caixa Yan",
+    "Dízimos", 
+    "Extras", 
+    "Outros"
+    ])
 if st.button("Salvar Despesa"):
     cursor.execute("INSERT INTO despesas (categoria, valor, responsavel, data) VALUES (?, ?, ?, ?)", 
                    (categoria, valor_despesa, responsavel, data_despesa))
