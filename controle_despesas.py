@@ -117,12 +117,10 @@ orçamento = st.selectbox("Como será pago?", [
     "Mercado", 
     "Emergência",
     "Prioridades",
-    "Ajuda Leo",
+    "Ajuda",
     "Caixa Viagem", 
     "Emplacamento", 
-    "Ajuda Vivian", 
-    "Oferta Leo", 
-    "Oferta Vivian", 
+    "Oferta", 
     "Caixa Yan",
     "Dízimos", 
     "Extras", 
@@ -133,6 +131,31 @@ if st.button("Salvar Despesa"):
                    (categoria, valor_despesa, responsavel, data_despesa))
     conn.commit()
     st.success("Despesa Adicionada!")
+
+### 📊 Seção para visualização de dados do banco
+st.header("📊 Visualização de Dados")
+
+# Traga os dados gravados no banco
+cursor.execute("SELECT origem, valor, data FROM receitas")
+receitas = cursor.fetchall()
+
+cursor.execute("SELECT categoria, valor, responsavel, data FROM despesas")
+despesas = cursor.fetchall()
+
+# Criar DataFrames com os dados
+df_receitas = pd.DataFrame(receitas, columns=["Origem", "Valor", "Data"])
+df_despesas = pd.DataFrame(despesas, columns=["Categoria", "Valor", "Responsável", "Data"])
+
+# Exibir os DataFrames na tela
+st.subheader("Receitas Cadastradas")
+st.dataframe(df_receitas)
+
+st.subheader("Despesas Cadastradas")
+st.dataframe(df_despesas)
+
+
+
+
 
 # Fechar conexão com o banco
 conn.close()
