@@ -27,6 +27,11 @@ CREATE TABLE IF NOT EXISTS despesas (
 """)
 conn.commit()
 
+# Atualizar os valores no banco de dados
+cursor.execute("UPDATE despesas SET responsavel = 'Esposo' WHERE responsavel = 'Leo'")
+cursor.execute("UPDATE despesas SET responsavel = 'Esposa' WHERE responsavel = 'Vivian'")
+conn.commit()
+
 # Título principal
 st.title("💰 Gerenciador de Orçamento Familiar")
 
@@ -89,7 +94,7 @@ if despesas:
     
     categoria = st.text_input("Categoria da Despesa", value=despesa[1], key=f"categoria_{despesa[0]}")
     valor_despesa = st.number_input("Valor da Despesa", min_value=0.01, format="%.2f", value=despesa[2], key=f"valor_despesa_{despesa[0]}")
-    responsavel = st.selectbox("Responsável pelo Pagamento", ["Léo", "Vivian"], index=["Léo", "Vivian"].index(despesa[3]), key=f"responsavel_{despesa[0]}")
+    responsavel = st.selectbox("Responsável pelo Pagamento", ["Esposo", "Esposa"], index=["Esposo", "Esposa"].index(despesa[3]), key=f"responsavel_{despesa[0]}")
     data_despesa = st.date_input("Data da Despesa", value=pd.to_datetime(despesa[4]), key=f"data_despesa_{despesa[0]}")
     
     if st.button("Atualizar Despesa"):
@@ -109,7 +114,7 @@ else:
 st.subheader("Cadastrar Nova Despesa")
 categoria = st.text_input("Categoria da Despesa")
 valor_despesa = st.number_input("Valor da Despesa", min_value=0.01, format="%.2f", key="novo_valor_despesa")
-responsavel = st.selectbox("Responsável pelo Pagamento", ["Léo", "Vivian"])
+responsavel = st.selectbox("Responsável pelo Pagamento", ["Esposo", "Esposa"])
 data_despesa = st.date_input("Data da Despesa")
 
 orçamento = st.selectbox("Como será pago?", [
@@ -117,10 +122,12 @@ orçamento = st.selectbox("Como será pago?", [
     "Mercado", 
     "Emergência",
     "Prioridades",
-    "Ajuda",
+    "Ajuda Leo",
     "Caixa Viagem", 
     "Emplacamento", 
-    "Oferta", 
+    "Ajuda Vivian", 
+    "Oferta Leo", 
+    "Oferta Vivian", 
     "Caixa Yan",
     "Dízimos", 
     "Extras", 
@@ -132,30 +139,21 @@ if st.button("Salvar Despesa"):
     conn.commit()
     st.success("Despesa Adicionada!")
 
-### 📊 Seção para visualização de dados do banco
+### 📊 Seção para visualização de dados
 st.header("📊 Visualização de Dados")
 
-# Traga os dados gravados no banco
-cursor.execute("SELECT origem, valor, data FROM receitas")
-receitas = cursor.fetchall()
-
-cursor.execute("SELECT categoria, valor, responsavel, data FROM despesas")
-despesas = cursor.fetchall()
-
-# Criar DataFrames com os dados
-df_receitas = pd.DataFrame(receitas, columns=["Origem", "Valor", "Data"])
-df_despesas = pd.DataFrame(despesas, columns=["Categoria", "Valor", "Responsável", "Data"])
-
-# Exibir os DataFrames na tela
+# Mostrar os dados já cadastrados em um DataFrame
 st.subheader("Receitas Cadastradas")
+cursor.execute("SELECT id, origem, valor, data FROM receitas")
+dados_receitas = cursor.fetchall()
+df_receitas = pd.DataFrame(dados_receitas, columns=["ID", "Origem", "Valor", "Data"])
 st.dataframe(df_receitas)
 
 st.subheader("Despesas Cadastradas")
+cursor.execute("SELECT id, categoria, valor, responsavel, data FROM despesas")
+dados_despesas = cursor.fetchall()
+df_despesas = pd.DataFrame(dados_despesas, columns=["ID", "Categoria", "Valor", "Responsável", "Data"])
 st.dataframe(df_despesas)
-
-
-
-
 
 # Fechar conexão com o banco
 conn.close()
