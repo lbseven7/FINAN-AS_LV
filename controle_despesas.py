@@ -146,13 +146,13 @@ st.header("📊 Visualização de Dados")
 st.subheader("Receitas Cadastradas")
 cursor.execute("SELECT id, origem, valor, data FROM receitas")
 dados_receitas = cursor.fetchall()
-df_receitas = pd.DataFrame(dados_receitas, columns=["ID", "Origem", "Valor", "Data"])
+df_receitas = pd.DataFrame(dados_receitas, columns=["ID", "Origem", "Valor R$", "Data"])
 st.dataframe(df_receitas)
 
 st.subheader("Despesas Cadastradas")
 cursor.execute("SELECT id, categoria, valor, responsavel, data FROM despesas")
 dados_despesas = cursor.fetchall()
-df_despesas = pd.DataFrame(dados_despesas, columns=["ID", "Categoria", "Valor", "Responsável", "Data"])
+df_despesas = pd.DataFrame(dados_despesas, columns=["ID", "Categoria", "Valor R$", "Responsável", "Data"])
 st.dataframe(df_despesas)
 
 # Fechar conexão com o banco
