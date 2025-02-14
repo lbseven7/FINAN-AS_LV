@@ -14,4 +14,4 @@ RUN pip install --no-cache-dir streamlit pandas plotly
 EXPOSE 8501
 
 # Comando para rodar a aplicação
-CMD ["streamlit", "run", "controle_despesas.py", "--server.port=8501", "--server.address=0.0.0.0"]
+CMD ["streamlit", "run", "main.py", "--server.port=8501", "--server.address=0.0.0.0"]
