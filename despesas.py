@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 
 def gerenciar_despesas(conn):
-    st.header("📤 Adicionar ou Editar Despesa")
+    st.header("📤 Editar Despesa")
     cursor = conn.cursor()
     cursor.execute("SELECT id, categoria, valor, responsavel, data FROM despesas")
     despesas = cursor.fetchall()

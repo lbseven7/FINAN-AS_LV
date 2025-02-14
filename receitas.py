@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 
 def gerenciar_receitas(conn):
-    st.header("📥 Adicionar ou Editar Receita")
+    st.header("📥 Editar ou Cadastrar uma Receita")
     cursor = conn.cursor()
     cursor.execute("SELECT id, origem, valor, data FROM receitas")
     receitas = cursor.fetchall()
