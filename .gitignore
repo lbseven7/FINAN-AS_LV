@@ -17,8 +17,7 @@ venv/
 .streamlit/
 
 # Arquivos do sistema
-.DS_Store
-Thumbs.db
+
 
 # Logs e arquivos temporários
 logs/

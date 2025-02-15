@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-from database import conectar_banco, criar_tabelas, atualizar_valores
+from database import conectar_banco, criar_tabelas, atualizar_valores, atualizar_meses_vazios
 from receitas import gerenciar_receitas
 from despesas import gerenciar_despesas, exibir_dados
 from graficos import exibir_grafico_pizza
@@ -20,9 +20,11 @@ def main():
         if opcao == "Visão Geral":
             st.title("📊 Visão Geral do Orçamento")
             st.subheader("Receitas Cadastradas")
+            atualizar_meses_vazios(conn)
             exibir_dados(conn, "receitas", ["ID", "Origem", "Valor", "Data", "Mês"])
             
             st.subheader("Despesas Cadastradas")
+            atualizar_meses_vazios(conn)
             exibir_dados(conn, "despesas", ["ID", "Categoria", "Valor", "Responsável", "Data", "Mês"])
 
         elif opcao == "Gerenciar Receitas":
