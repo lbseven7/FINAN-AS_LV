@@ -34,13 +34,13 @@ def atualizar_meses_vazios(conn):
     conn.execute("""
         UPDATE receitas
         SET mes = strftime('%m', data)
-        WHERE mes IS NULL
     """)
     
     conn.execute("""
         UPDATE despesas
         SET mes = strftime('%m', data)
-        WHERE mes IS NULL
     """)
     
     conn.commit()
+
+
