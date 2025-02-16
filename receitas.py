@@ -1,10 +1,22 @@
 import streamlit as st
 import pandas as pd
+import sqlite3
+import os
+
+# Função para manter a conexão única com o banco de dados
+@st.cache_resource
+def get_connection():
+    DB_PATH = os.path.join(os.path.dirname(__file__), "orcamento.db")
+    return sqlite3.connect(DB_PATH, check_same_thread=False)
+
+conn = get_connection()
 
 def gerenciar_receitas(conn):
     st.header("📥 Editar ou Cadastrar uma Receita")
     cursor = conn.cursor()
-    cursor.execute("SELECT id, origem, valor, data FROM receitas")
+    
+    # Buscar receitas do banco
+    cursor.execute("SELECT id, origem, valor, data, strftime('%m', data) AS mes FROM receitas")
     receitas = cursor.fetchall()
 
     if receitas:
@@ -16,25 +28,43 @@ def gerenciar_receitas(conn):
                 data_receita = st.date_input(f"Data da Receita {receita_info}", value=pd.to_datetime(receita[3]), key=f"data_receita_{receita[0]}")
 
                 if st.button(f"Atualizar Receita {receita_info}", key=f"atualizar_{receita[0]}"):
-                    cursor.execute("UPDATE receitas SET origem = ?, valor = ?, data = ? WHERE id = ?", 
-                                   (origem, valor_receita, data_receita, receita[0]))
-                    conn.commit()
-                    st.success(f"Receita {receita_info} Atualizada!")
+                    try:
+                        cursor.execute("UPDATE receitas SET origem = ?, valor = ?, data = ? WHERE id = ?", 
+                                       (origem, valor_receita, data_receita, receita[0]))
+                        conn.commit()
+                        st.success(f"Receita {receita_info} Atualizada!")
+                        st.rerun()  # 🔄 Recarrega a página
+                    except Exception as e:
+                        st.error(f"Erro ao atualizar: {e}")
 
                 if st.button(f"Excluir Receita {receita_info}", key=f"excluir_{receita[0]}"):
-                    cursor.execute("DELETE FROM receitas WHERE id = ?", (receita[0],))
-                    conn.commit()
-                    st.success(f"Receita {receita_info} Excluída!")
+                    try:
+                        cursor.execute("DELETE FROM receitas WHERE id = ?", (receita[0],))
+                        conn.commit()
+                        st.success(f"Receita {receita_info} Excluída!")
+                        st.rerun()  # 🔄 Recarrega a página
+                    except Exception as e:
+                        st.error(f"Erro ao excluir: {e}")
     else:
         st.info("Nenhuma receita registrada ainda.")
 
+    # Seção para cadastrar nova receita
     st.subheader("Cadastrar Nova Receita")
     origem = st.text_input("Origem da Receita")
     valor_receita = st.number_input("Valor da Receita", min_value=0.01, format="%.2f", key="novo_valor_receita")
-    data_receita = st.date_input("Data da Receita")
+    data_receita = st.date_input("Data da Receita", key="nova_data_receita")
 
     if st.button("Salvar Receita"):
-        cursor.execute("INSERT INTO receitas (origem, valor, data) VALUES (?, ?, ?)", 
-                       (origem, valor_receita, data_receita))
-        conn.commit()
-        st.success("Receita Adicionada!")
+        if origem and valor_receita and data_receita:
+            try:
+                # Obtendo o mês a partir da data da receita
+                mes_receita = str(data_receita.month).zfill(2)
+                cursor.execute("INSERT INTO receitas (origem, valor, data, mes) VALUES (?, ?, ?, ?)", 
+                               (origem, valor_receita, data_receita, mes_receita))
+                conn.commit()
+                st.success("Receita Adicionada!")
+                st.rerun()  # 🔄 Recarrega a página
+            except Exception as e:
+                st.error(f"Erro ao salvar receita: {e}")
+        else:
+            st.warning("Preencha todos os campos antes de salvar!")
