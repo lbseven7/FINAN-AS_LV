@@ -7,8 +7,6 @@ from despesas import gerenciar_despesas, exibir_dados
 from graficos import exibir_grafico_pizza
 
 def main():
-    st.set_page_config(page_title="Gerenciador de Orçamento", layout="wide")
-
     st.sidebar.title("📌 Menu de Navegação")
     opcao = st.sidebar.radio("Selecione uma opção:", 
                              ["Visão Geral", "Gerenciar Receitas", "Gerenciar Despesas", "📊 Gráfico de Pizza"])
